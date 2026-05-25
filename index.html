@@ -7,18 +7,35 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @media print {
-            /* Memaksa background putih bersih dan menghilangkan bayangan */
-            body, .max-w-4xl, table, thead, tbody, tfoot, tr, td, th, div { 
-                background: #ffffff !important; 
-                background-color: #ffffff !important;
-                color: #000000 !important;
-                box-shadow: none !important;
+            /* Menghilangkan background abu-abu di luar area dokumen utama */
+            body { 
+                background-color: #ffffff !important; 
+                background: #ffffff !important;
+                padding: 0 !important;
             }
-            body { font-size: 12px; p: 0; }
+            
+            /* Memastikan container utama tidak memiliki shadow/border luar saat cetak */
+            .max-w-4xl { 
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                margin: 0 auto !important;
+            }
+
+            /* Menyembunyikan elemen interaktif */
             .no-print { display: none !important; }
-            .print-only { display: block !important; }
-            .border, border-b, border-t { border-color: #000000 !important; }
-            input { border-bottom: 1px solid #000 !important; background: transparent !important; }
+            
+            /* Memaksa browser printer untuk mencetak warna latar belakang (Trik CSS Kunci) */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Penyesuaian garis input agar terlihat jelas saat dicetak */
+            input { 
+                border-bottom: 1px solid #9ca3af !important; 
+                background: transparent !important; 
+            }
         }
     </style>
 </head>
@@ -154,7 +171,7 @@
         </div>
 
         <div class="bg-yellow-50 border-l-4 border-yellow-500 p-3 mb-6 rounded-r">
-            <p class="text-xs text-yellow-800 leading-relaxed print:text-black">
+            <p class="text-xs text-yellow-800 leading-relaxed">
                 Dengan ini kami sampaikan informasi pengiriman. Mohon periksa barang setelah diterima sesuai dengan rincian terlampir. 
                 Jika ada ketidaksesuaian atau kerusakan, harap segera hubungi kami. Terima kasih atas kepercayaan dan kerja sama Anda.
             </p>
@@ -163,7 +180,7 @@
         <div class="mb-8">
             <div class="overflow-x-auto">
                 <table class="min-w-full text-xs text-left border border-gray-300 rounded-lg overflow-hidden">
-                    <thead class="bg-blue-900 text-white uppercase tracking-wider font-semibold print:bg-black">
+                    <thead class="bg-blue-900 text-white uppercase tracking-wider font-semibold">
                         <tr>
                             <th class="px-4 py-2.5 text-center w-12">Nomor</th>
                             <th class="px-4 py-2.5">Serial Number</th>
@@ -182,7 +199,7 @@
                         <tr>
                             <td colspan="3" class="px-4 py-3 text-right uppercase tracking-wider">Grand Total</td>
                             <td class="px-4 py-3 text-right text-blue-900 font-mono" id="grandTotal">0</td>
-                            <td colspan="2" class="px-4 py-3 bg-gray-100/50 print:bg-transparent"></td>
+                            <td colspan="2" class="px-4 py-3 bg-gray-100/50"></td>
                         </tr>
                     </tfoot>
                 </table>
@@ -308,7 +325,6 @@ function cariData() {
             document.getElementById('vPlate').innerText = response.info.licensePlate || "-";
             document.getElementById('vDriver').innerText = response.info.driver || "-";
             
-            // Otomatis sinkronisasi nama driver ke footer tanda tangan
             document.getElementById('footerDriver').innerText = response.info.driver || "";
             
             tableBody.innerHTML = "";
