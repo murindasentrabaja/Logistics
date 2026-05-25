@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surat Jalan / Delivery Order - PT Murinda Sentra Baja</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @media print {
+            /* Memaksa background putih bersih dan menghilangkan bayangan */
+            body, .max-w-4xl, table, thead, tbody, tfoot, tr, td, th, div { 
+                background: #ffffff !important; 
+                background-color: #ffffff !important;
+                color: #000000 !important;
+                box-shadow: none !important;
+            }
+            body { font-size: 12px; p: 0; }
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            .border, border-b, border-t { border-color: #000000 !important; }
+            input { border-bottom: 1px solid #000 !important; background: transparent !important; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans antialiased p-4 sm:p-8">
+
+    <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md border border-gray-200">
+        
+        <div class="no-print flex justify-end mb-6">
+            <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded shadow transition duration-200 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4" />
+                </svg>
+                Cetak / Simpan PDF
+            </button>
+        </div>
+
+        <div class="flex flex-col md:flex-row justify-between items-start border-b-2 border-gray-300 pb-6 mb-6">
+            <div>
+                <img src="Murinda Logo.png" alt="Logo Murinda" class="h-10 mb-2">
+                <p class="text-md font-semibold text-gray-700">PT MURINDA SENTRA BAJA</p>
+                <div class="text-xs text-gray-500 mt-2 max-w-sm leading-relaxed">
+                    Jl. Raya Kalijati Purwadadi No. 123A RT 006/02,<br>
+                    Kalijati Barat, Kalijati, Kab. Subang,<br>
+                    Jawa Barat 41271 (Exit Toll Gate Kalijati)<br>
+                    <span class="font-semibold">Phone:</span> (+62260) 7495467 &nbsp;|&nbsp; <span class="font-semibold">Fax:</span> (+62260) 7495222<br>
+                    <span class="font-semibold">E-mail:</span> plant@murinda.com
+                </div>
+            </div>
+            
+            <div class="mt-4 md:mt-0 text-right text-xs">
+                <div class="bg-gray-50 border border-gray-200 rounded p-2 inline-block text-left">
+                    <table class="w-full">
+                        <tr>
+                            <td class="pr-4 text-gray-500">No. Form</td>
+                            <td class="font-mono font-semibold">: MSB/F-LOG-001</td>
+                        </tr>
+                        <tr>
+                            <td class="pr-4 text-gray-500">Revisi</td>
+                            <td>: Rev.00</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center my-6">
+            <h2 class="text-2xl font-bold tracking-wide text-gray-800 uppercase border-b border-gray-200 inline-block pb-1">DELIVERY ORDER</h2>
+            <p class="text-sm text-gray-500 mt-1">Surat Jalan Pengiriman Barang</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 text-sm">
+            
+            <div class="bg-blue-50/50 p-4 rounded-lg border border-blue-100 flex flex-col justify-between">
+                <div>
+                    <span class="text-xs uppercase tracking-wider text-blue-800 font-bold block mb-2">Dikirimkan Kepada:</span>
+                    
+                    <select id="selectCustomer" onchange="gantiAlamat()" class="no-print border border-gray-300 px-2 py-1 rounded w-full font-semibold text-xs mb-3 text-gray-800 bg-white focus:outline-none focus:border-blue-500">
+                        <option value="KOMATSU_INDO">PT KOMATSU INDONESIA</option>
+                        <option value="KOMATSU_CIBITUNG">PT KOMATSU PLANT CIBITUNG</option>
+                        <option value="SUMITOMO">PT SUMITOMO CONSTRUCTION MACHINERY INDONESIA</option>
+                    </select>
+
+                    <p id="printCustomerName" class="hidden print:block font-bold text-gray-900 text-sm uppercase mb-1"></p>
+                    
+                    <p id="customerAddress" class="text-xs text-gray-700 mt-1 leading-relaxed min-h-[40px]">
+                        Jl. Cakung Cilincing Raya No.KM. 4, RT.7/RW.2, Sukapura, Kec. Cilincing, Jakarta Utara, Daerah Khusus Ibukota Jakarta 14140
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-2 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <table class="w-full text-xs">
+                    <tr>
+                        <td class="w-1/3 py-1 text-gray-500 align-middle">No. Surat Jalan</td>
+                        <td class="py-1 font-semibold text-gray-800 flex items-center gap-1">
+                            <span>:</span>
+                            <select id="selectDeliveryNumber" onchange="cariData()" class="no-print border border-gray-300 px-2 py-1 rounded w-48 font-mono text-xs focus:outline-none focus:border-blue-500 bg-white">
+                                <option value="">-- Memuat Data... --</option>
+                            </select>
+                            <span id="textDeliveryNumber" class="font-mono text-gray-900 bg-yellow-100 print:bg-transparent px-1 rounded"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="py-1 text-gray-500">Hari, Tanggal</td>
+                        <td class="py-1" id="docDeliveryDate">: -</td>
+                    </tr>
+                    <tr>
+                        <td class="py-1 text-gray-500">Halaman</td>
+                        <td class="py-1">: 1 dari 1</td>
+                    </tr>
+                    <tr>
+                        <td class="py-1 text-gray-500">PIC Penerima</td>
+                        <td class="py-1">
+                            <input type="text" placeholder="Masukkan nama..." class="border-b border-gray-400 w-full focus:outline-none bg-transparent">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="py-1 text-gray-500">Telp/Whatsapp</td>
+                        <td class="py-1">
+                            <input type="text" placeholder="Masukkan nomor..." class="border-b border-gray-400 w-full focus:outline-none bg-transparent">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="py-1 text-gray-500">Catatan</td>
+                        <td class="py-1">
+                            <input type="text" placeholder="Masukkan catatan..." class="border-b border-gray-400 w-full focus:outline-none bg-transparent">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="mb-6">
+            <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Rincian Kendaraan:</h3>
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-xs text-left border border-gray-200 rounded-lg overflow-hidden">
+                    <thead class="bg-gray-100 uppercase text-gray-600 font-semibold border-b border-gray-200">
+                        <tr>
+                            <th class="px-4 py-2">Transporter</th>
+                            <th class="px-4 py-2">Plat Kendaraan</th>
+                            <th class="px-4 py-2">Pengemudi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 text-gray-700">
+                        <tr>
+                            <td class="px-4 py-3 font-medium" id="vTransporter">-</td>
+                            <td class="px-4 py-3 font-mono" id="vPlate">-</td>
+                            <td class="px-4 py-3" id="vDriver">-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="bg-yellow-50 border-l-4 border-yellow-500 p-3 mb-6 rounded-r">
+            <p class="text-xs text-yellow-800 leading-relaxed print:text-black">
+                Dengan ini kami sampaikan informasi pengiriman. Mohon periksa barang setelah diterima sesuai dengan rincian terlampir. 
+                Jika ada ketidaksesuaian atau kerusakan, harap segera hubungi kami. Terima kasih atas kepercayaan dan kerja sama Anda.
+            </p>
+        </div>
+
+        <div class="mb-8">
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-xs text-left border border-gray-300 rounded-lg overflow-hidden">
+                    <thead class="bg-blue-900 text-white uppercase tracking-wider font-semibold print:bg-black">
+                        <tr>
+                            <th class="px-4 py-2.5 text-center w-12">Nomor</th>
+                            <th class="px-4 py-2.5">Serial Number</th>
+                            <th class="px-4 py-2.5">Unit</th>
+                            <th class="px-4 py-2.5 text-right w-20">Qty</th>
+                            <th class="px-4 py-2.5 w-24">UOM</th>
+                            <th class="px-4 py-2.5">PO Number</th>
+                        </tr>
+                    </thead>
+                    <tbody id="itemsTableBody" class="divide-y divide-gray-200 text-gray-700">
+                        <tr>
+                            <td colspan="6" class="px-4 py-4 text-center text-gray-400 italic">Belum ada data surat jalan yang dipilih</td>
+                        </tr>
+                    </tbody>
+                    <tfoot class="bg-gray-50 border-t-2 border-gray-300 font-bold text-gray-950 text-sm">
+                        <tr>
+                            <td colspan="3" class="px-4 py-3 text-right uppercase tracking-wider">Grand Total</td>
+                            <td class="px-4 py-3 text-right text-blue-900 font-mono" id="grandTotal">0</td>
+                            <td colspan="2" class="px-4 py-3 bg-gray-100/50 print:bg-transparent"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4 text-center text-xs mt-12 mb-6">
+            <div class="flex flex-col items-center">
+                <p class="text-gray-500 mb-4 uppercase tracking-wider font-semibold text-center">Dikirim Oleh,</p>
+                <div class="flex items-center gap-3">
+                    <img src="Aspuro Amarulloh Khoiri.png" alt="QR Code" class="w-16 h-16">
+                    <div class="text-left">
+                        <p class="text-[10px] leading-tight font-medium">Ditanda Tangani Secara Digital Oleh:</p>
+                        <p class="text-[10px] leading-tight text-gray-500">Plant Administrasi</p>
+                        <p class="text-xs font-bold mt-1">Aspuro Amarulloh Khoiri</p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <p class="text-gray-500 mb-16 uppercase tracking-wider font-semibold">Pengemudi,</p>
+                <div class="border-b border-gray-400 mx-6 font-semibold text-center min-h-[16px] text-gray-900" id="footerDriver"></div> 
+                <p class="text-gray-400 mt-1 italic">Nama Jelas</p>
+            </div>
+            <div>
+                <p class="text-gray-500 mb-16 uppercase tracking-wider font-semibold">Diterima Oleh,</p>
+                <div class="border-b border-gray-400 mx-6"></div>
+                <p class="text-gray-400 mt-1 italic">*Nama lengkap & Stamp</p>
+            </div>
+        </div>
+
+        <div class="border-t border-gray-200 pt-3 mt-8 flex flex-col sm:flex-row justify-between items-center text-[10px] text-gray-400 italic">
+            <div>Dokumen ini dicetak secara otomatis terintegrasi ERP System Murinda Sentra Baja</div>
+            <div class="font-mono mt-1 sm:mt-0" id="printTimestamp">-</div>
+        </div>
+
+    </div>
+
+<script>
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwbJATNZKOfMvPYItbH4FWGph4Y9zsKLr0Pynr1ZnHnDcp4-YAVm1HPB8QUSaxr7AfX5A/exec';
+
+const daftarAlamat = {
+    "KOMATSU_INDO": {
+        nama: "PT KOMATSU INDONESIA",
+        alamat: "Jl. Cakung Cilincing Raya No.KM. 4, RT.7/RW.2, Sukapura, Kec. Cilincing, Jakarta Utara, Daerah Khusus Ibukota Jakarta 14140"
+    },
+    "KOMATSU_CIBITUNG": {
+        nama: "PT KOMATSU PLANT CIBITUNG",
+        alamat: "Kawasan Industri MM 2100, Jl. Jawa Raya Blok JJ IV-2, Cibitung, Jatiwangi, Kec. Cikarang Bar., Kabupaten Bekasi, Jawa Barat 17530"
+    },
+    "SUMITOMO": {
+        nama: "PT SUMITOMO CONSTRUCTION MACHINERY INDONESIA",
+        alamat: "Jl. Maligi VIII Lot T-1, Karawang International Industrial City (KIIC), Teluk jambe Barat, Karawang, Jawa Barat 41361 Indonesia"
+    }
+};
+
+window.onload = function() {
+    const sekarang = new Date();
+    const opsi = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    document.getElementById('printTimestamp').innerText = "Kalijati-Subang, " + sekarang.toLocaleDateString('id-ID', opsi);
+
+    gantiAlamat();
+    loadDropdownData();
+}
+
+function gantiAlamat() {
+    const pilihan = document.getElementById('selectCustomer').value;
+    const dataTujuan = daftarAlamat[pilihan];
+    
+    document.getElementById('customerAddress').innerText = dataTujuan.alamat;
+    document.getElementById('printCustomerName').innerText = dataTujuan.nama;
+}
+
+function loadDropdownData() {
+    const dropdown = document.getElementById('selectDeliveryNumber');
+    
+    fetch(WEB_APP_URL)
+    .then(res => res.json())
+    .then(response => {
+        if (response.status === "success") {
+            dropdown.innerHTML = '<option value="">-- Pilih No. Surat Jalan --</option>';
+            response.list.forEach(num => {
+                if(num && num !== "null") {
+                    let option = document.createElement('option');
+                    option.value = num;
+                    option.textContent = num;
+                    dropdown.appendChild(option);
+                }
+            });
+        } else {
+            dropdown.innerHTML = '<option value="">Gagal memuat daftar DO</option>';
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        dropdown.innerHTML = '<option value="">Kesalahan Jaringan</option>';
+    });
+}
+
+function cariData() {
+    const selectBox = document.getElementById('selectDeliveryNumber');
+    const deliveryNumber = selectBox.value;
+    const textDeliveryNode = document.getElementById('textDeliveryNumber');
+    const tableBody = document.getElementById('itemsTableBody');
+
+    if (!deliveryNumber) {
+        resetForm();
+        return;
+    }
+
+    textDeliveryNode.innerText = "Memuat...";
+
+    fetch(WEB_APP_URL, {
+        method: 'POST',
+        body: JSON.stringify({ deliveryNumber: deliveryNumber })
+    })
+    .then(res => res.json())
+    .then(response => {
+        if (response.status === "success") {
+            textDeliveryNode.innerText = deliveryNumber;
+            
+            document.getElementById('docDeliveryDate').innerText = ": " + (response.info.deliveryDate || "-");
+            document.getElementById('vTransporter').innerText = response.info.transporter || "-";
+            document.getElementById('vPlate').innerText = response.info.licensePlate || "-";
+            document.getElementById('vDriver').innerText = response.info.driver || "-";
+            
+            // Otomatis sinkronisasi nama driver ke footer tanda tangan
+            document.getElementById('footerDriver').innerText = response.info.driver || "";
+            
+            tableBody.innerHTML = "";
+            let totalQty = 0;
+            
+            response.items.forEach((item, index) => {
+                totalQty += item.qty;
+                
+                let row = `
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="px-4 py-2.5 text-center font-medium text-gray-400">${index + 1}</td>
+                        <td class="px-4 py-2.5 font-mono text-gray-500">${item.serialNumber || "-"}</td>
+                        <td class="px-4 py-2.5 font-medium text-gray-900">${item.unit || "-"}</td>
+                        <td class="px-4 py-2.5 text-right font-semibold">${item.qty}</td>
+                        <td class="px-4 py-2.5 text-gray-500">${item.uom || "-"}</td>
+                        <td class="px-4 py-2.5 font-mono text-gray-500">${item.poNumber || "-"}</td>
+                    </tr>
+                `;
+                tableBody.insertAdjacentHTML('beforeend', row);
+            });
+            
+            document.getElementById('grandTotal').innerText = totalQty;
+            
+        } else {
+            alert('Data gagal ditemukan.');
+            textDeliveryNode.innerText = "";
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Terjadi kegagalan koneksi saat mengambil rincian data.');
+        textDeliveryNode.innerText = "";
+    });
+}
+
+function resetForm() {
+    document.getElementById('textDeliveryNumber').innerText = "";
+    document.getElementById('docDeliveryDate').innerText = ": -";
+    document.getElementById('vTransporter').innerText = "-";
+    document.getElementById('vPlate').innerText = "-";
+    document.getElementById('vDriver').innerText = "-";
+    document.getElementById('footerDriver').innerText = "";
+    document.getElementById('itemsTableBody').innerHTML = `
+        <tr>
+            <td colspan="6" class="px-4 py-4 text-center text-gray-400 italic">Belum ada data surat jalan yang dipilih</td>
+        </tr>
+    `;
+    document.getElementById('grandTotal').innerText = "0";
+}
+</script>
+</body>
+</html>
