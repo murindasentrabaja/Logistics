@@ -3,467 +3,491 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Surat Jalan / Delivery Order - PT Murinda Sentra Baja</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Formulir Izin Terpadu - PT Murinda Sentra Baja</title>
     <style>
+        :root { 
+            --primary: #1e3a8a; 
+            --primary-light: #3b82f6;
+            --bg-body: #f8fafc;
+            --text-main: #1e293b;
+            --border-color: #cbd5e1;
+        }
+        
+        * { box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            background-color: var(--bg-body); 
+            padding: 30px 20px; 
+            color: var(--text-main); 
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .form-container { 
+            background: #fff; 
+            max-width: 850px; 
+            margin: auto; 
+            padding: 40px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
+            border-radius: 12px; 
+            border: 1px solid #e2e8f0;
+        }
+
+        /* HEADER SECTION */
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-bottom: 3px double var(--primary);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+        .header-logo-cell {
+            vertical-align: bottom;
+            padding-bottom: 8px;
+        }
+        .header-title-cell {
+            text-align: right;
+            vertical-align: bottom;
+            padding-bottom: 8px;
+        }
+        .company-title h2 { margin: 0; color: var(--primary); font-size: 22px; font-weight: 800; letter-spacing: 0.5px; line-height: 1.2; }
+        .company-title div { font-size: 13px; color: #64748b; margin-top: 2px; font-weight: 500; }
+        .doc-title-main { font-size: 18px; font-weight: bold; color: #1e293b; display: block; }
+        .doc-title-sub { font-size: 12px; font-weight: 500; color: #64748b; letter-spacing: 0.5px; display: block; margin-top: 2px; }
+        .doc-meta { font-size: 10px; color: #64748b; margin-top: 4px; }
+
+        /* SEARCH BAR */
+        .search-section {
+            background: #f1f5f9;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .search-group { flex: 1; display: flex; align-items: center; gap: 10px; }
+        .search-group label { margin-bottom: 0; white-space: nowrap; font-size: 14px; }
+        .search-input { 
+            flex: 1; 
+            padding: 10px 14px; 
+            border: 2px solid var(--border-color); 
+            border-radius: 6px; 
+            font-size: 14px; font-weight: 600; color: var(--primary);
+            transition: all 0.3s;
+        }
+        .search-input:focus { border-color: var(--primary-light); outline: none; background: #fff; }
+        .btn-search {
+            padding: 10px 24px; background: var(--primary); color: white; border: none; 
+            border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.2s;
+        }
+        .btn-search:hover { background: #172554; transform: translateY(-1px); }
+
+        /* SECTION HEADER */
+        .section-header { 
+            font-weight: 700; color: var(--primary); 
+            border-bottom: 2px solid #e2e8f0; 
+            margin: 25px 0 15px 0; padding-bottom: 6px; 
+            text-transform: uppercase; font-size: 12px; letter-spacing: 1px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .section-header::before {
+            content: ''; display: inline-block; width: 4px; height: 15px; background: var(--primary-light); border-radius: 2px;
+        }
+        
+        /* FORM GRID & LAYOUTS */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 12px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 12px; }
+        .form-group { display: flex; flex-direction: column; }
+        
+        label { font-size: 12px; margin-bottom: 5px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.3px; }
+        input[type="text"] { 
+            width: 100%; padding: 10px 12px; border: 1px solid var(--border-color); 
+            border-radius: 6px; background-color: #fafafa; font-size: 13.5px; font-weight: 500; color: #334155;
+        }
+        input[type="text"]:focus { background-color: #fff; border-color: var(--primary-light); outline: none; }
+
+        /* CLASSIFICATION BOXES */
+        .grid-klasifikasi { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .klasifikasi-box { border: 1px solid #e2e8f0; padding: 16px; border-radius: 8px; background: #fff; }
+        .klasifikasi-box h4 { margin: 0 0 12px 0; font-size: 12px; color: var(--primary); border-bottom: 1px dashed #e2e8f0; padding-bottom: 6px; font-weight: 700; }
+        .checkbox-item { display: flex; align-items: center; font-size: 13px; margin-bottom: 8px; color: #334155; font-weight: 500; text-transform: none; cursor: pointer; }
+        .checkbox-item input { margin-right: 10px; width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; }
+
+        /* SIGNATURE SECTION */
+        .signature-table { width: 100%; border-collapse: collapse; margin-top: 35px; table-layout: fixed; }
+        .signature-table td { padding: 0 8px; }
+        .signature-table td:first-child { padding-left: 0; }
+        .signature-table td:last-child { padding-right: 0; }
+        .sig-container { border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px; text-align: center; background: #fafafa; width: 100%; }
+        .sig-box { 
+            height: 75px; 
+            margin-bottom: 8px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        .sig-label { font-size: 11px; font-weight: 700; color: #475569; border-top: 1px solid #e2e8f0; padding-top: 6px; text-transform: uppercase; }
+
+        /* SAFETY & RULES INFO */
+        .rules-box { background: #fff; border-left: 4px solid var(--primary); padding: 15px; margin-top: 30px; border-top: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; border-radius: 0 8px 8px 0; font-size: 12px; color: #475569; }
+        .rules-box strong { color: var(--primary); display: block; margin-bottom: 5px; }
+        
+        /* FOOTER INFO */
+        .footer-table { width: 100%; margin-top: 25px; padding-top: 12px; border-top: 1px solid #e2e8f0; font-size: 11px; color: #64748b; }
+        .footer-left { text-align: left; }
+        .footer-right { text-align: right; }
+
+        /* PRINT CONFIGURATION */
         @media print {
-            /* Pengaturan cetak umum */
-            body { 
-                background-color: #ffffff !important; 
-                background: #ffffff !important;
-                padding: 0 !important;
+            @page { 
+                size: A4 portrait; 
+                margin: 20mm 22mm 20mm 22mm; 
             }
-            .max-w-4xl { 
-                border: none !important;
-                box-shadow: none !important;
-                padding: 0 !important;
-                margin: 0 auto !important;
-            }
-            .no-print { display: none !important; }
             
-            /* Jika cetak biasa / PDF, tetap pertahankan warna asli */
-            body:not(.dot-matrix) * {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
+            html, body {
+                height: 100%;
+                background: none; 
+                padding: 0 !important; 
+                margin: 0 !important;
+                color: #000; 
+                font-size: 12px; 
             }
 
-            /* ==================================================================
-               PENGATURAN KHUSUS DOT MATRIX (Hanya aktif jika tombol Dot Matrix diklik)
-               ================================================================== */
-            body.dot-matrix * {
-                font-family: 'Courier New', Courier, monospace !important;
-                color: #000000 !important;
-                background: transparent !important;
-                background-color: transparent !important;
-                box-shadow: none !important;
-                text-shadow: none !important;
-                font-weight: 600 !important; /* Membuat huruf lebih tebal & tegas saat dipukul jarum pita */
+            .form-container { 
+                box-shadow: none; 
+                border: none; 
+                max-width: 100%; 
+                width: 100%; 
+                height: 100%;
+                padding: 0 !important; 
+                margin: 0 !important;
+                background: transparent;
             }
 
-            /* Memastikan barcode tetap putih bersih di latar belakang agar bisa di-scan */
-            body.dot-matrix .barcode-container {
-                background-color: #ffffff !important;
-                border: 1px solid #000000 !important;
-                padding: 4px !important;
-            }
-            body.dot-matrix .barcode-container img {
-                filter: grayscale(100%) contrast(200%) !important;
+            .no-print, .search-section { 
+                display: none !important; 
             }
 
-            /* 1. Menghilangkan semua background kotak kaku & warna background header */
-            body.dot-matrix .bg-blue-900,
-            body.dot-matrix .bg-blue-50\/50,
-            body.dot-matrix .bg-gray-50,
-            body.dot-matrix .bg-gray-100,
-            body.dot-matrix .bg-yellow-50,
-            body.dot-matrix .rounded-lg,
-            body.dot-matrix .border-blue-100,
-            body.dot-matrix .border-gray-200 {
-                background-color: transparent !important;
-                background: transparent !important;
-                border-color: transparent !important;
-                box-shadow: none !important;
+            .header-table { 
+                margin-bottom: 18px; 
+                padding-bottom: 6px;
+                border-bottom: 2px solid #64748b;
+            }
+            .company-title h2 { font-size: 17px; }
+            .company-title div { font-size: 11.5px; }
+            .doc-title-main { font-size: 15px; }
+            .doc-title-sub { font-size: 11.5px; }
+            .doc-meta { font-size: 9.5px; margin-top: 2px; }
+
+            .section-header { 
+                margin: 24px 0 12px 0; 
+                padding-bottom: 4px;
+                font-size: 12px;
+            }
+            
+            .grid-2, .grid-3 { 
+                gap: 15px; 
+                margin-bottom: 14px; 
+            }
+            label { 
+                font-size: 10px; 
+                margin-bottom: 4px; 
+            }
+            input[type="text"] { 
+                border: none; 
+                border-bottom: 1px dashed #94a3b8; 
+                border-radius: 0; 
+                padding: 4px 0; 
+                background: transparent; 
+                font-size: 12.5px;
             }
 
-            /* 2. Mengubah format Tabel Rincian Kendaraan menjadi garis putus-putus (Sesuai Gambar) */
-            body.dot-matrix .mb-6 .overflow-x-auto table {
-                border: none !important;
-                border-top: 1.5px dashed #000000 !important;
-                border-bottom: 1.5px dashed #000000 !important;
-            }
-            body.dot-matrix .mb-6 th, 
-            body.dot-matrix .mb-6 td {
-                border: none !important;
-                padding: 4px 8px !important;
-            }
+            .grid-klasifikasi { gap: 20px; }
+            .klasifikasi-box { padding: 14px 16px; }
+            .klasifikasi-box h4 { margin-bottom: 10px; padding-bottom: 5px; font-size: 11px; }
+            .checkbox-item { font-size: 11.5px; margin-bottom: 7px; }
+            .checkbox-item input { width: 14px; height: 14px; margin-right: 8px; }
 
-            /* 3. Mengubah Tabel Item Utama menjadi Grid Hitam Tipis & Tegas (Sesuai Gambar) */
-            body.dot-matrix .mb-8 table {
-                border-collapse: collapse !important;
-                border: 2px solid #000000 !important;
-                border-radius: 0 !important;
+            .signature-table { margin-top: 30px; }
+            .sig-container { padding: 10px; background: transparent; }
+            .sig-box { 
+                height: 95px; 
+                margin-bottom: 6px; 
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
             }
-            body.dot-matrix .mb-8 th, 
-            body.dot-matrix .mb-8 td {
-                border: 1px solid #000000 !important;
-                padding: 6px 6px !important;
-            }
-            body.dot-matrix .mb-8 thead {
-                border-bottom: 2px solid #000000 !important;
-            }
-            body.dot-matrix .mb-8 tfoot {
-                border-top: 2px solid #000000 !important;
-            }
+            .sig-label { font-size: 10.5px; padding-top: 5px; }
 
-            /* 4. Penyesuaian garis input tulisan tangan saat dicetak */
-            body.dot-matrix input { 
-                border-bottom: 1px dashed #000000 !important; 
-                background: transparent !important; 
+            .rules-box { 
+                margin-top: 30px; 
+                padding: 12px 15px; 
+                font-size: 11.5px; 
+                line-height: 1.6;
+            }
+            
+            .footer-table { 
+                margin-top: 35px; 
+                padding-top: 10px; 
+                font-size: 10px; 
             }
         }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans antialiased p-4 sm:p-8">
+<body>
 
-    <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md border border-gray-200">
-        
-        <div class="no-print flex flex-col sm:flex-row justify-end gap-3 mb-6">
-            <button onclick="printDocument('standard')" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded shadow transition duration-200 flex items-center justify-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4" />
-                </svg>
-                Cetak Standard / PDF
-            </button>
-            <button onclick="printDocument('dotmatrix')" class="bg-gray-800 hover:bg-gray-900 text-white font-semibold py-2 px-4 rounded shadow transition duration-200 flex items-center justify-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                Cetak Dot Matrix
-            </button>
-        </div>
-
-        <div class="flex flex-col md:flex-row justify-between items-start border-b-2 border-gray-300 pb-6 mb-6">
-            <div>
-                <img src="Murinda Logo.png" alt="Logo Murinda" class="h-10 mb-2">
-                <p class="text-md font-semibold text-gray-700">PT MURINDA SENTRA BAJA</p>
-                <div class="text-xs text-gray-500 mt-2 max-w-sm leading-relaxed">
-                    Jl. Raya Kalijati Purwadadi No. 123A RT 006/02,<br>
-                    Kalijati Barat, Kalijati, Kab. Subang,<br>
-                    Jawa Barat 41271 (Exit Toll Gate Kalijati)<br>
-                    <span class="font-semibold">Phone:</span> (+62260) 7495467 &nbsp;|&nbsp; <span class="font-semibold">Fax:</span> (+62260) 7495222<br>
-                    <span class="font-semibold">E-mail:</span> plant@murinda.com
+<div class="form-container">
+    <table class="header-table">
+        <tr>
+            <td class="header-logo-cell">
+                <div class="company-title">
+                    <img src="Murinda Logo.png" alt="Logo Murinda" style="height: 24px; width: auto; display: block; margin-bottom: 6px; object-fit: contain;">
+                    <h2>PT MURINDA SENTRA BAJA</h2>
+                    <div>Human Resource & Employee Services</div>
                 </div>
-            </div>
-            
-            <div class="mt-4 md:mt-0 text-right text-xs">
-                <div class="bg-gray-50 border border-gray-200 rounded p-3 inline-block text-left shadow-sm">
-                    <table class="w-full mb-2">
-                        <tr>
-                            <td class="pr-4 text-gray-500 font-medium">No. Form</td>
-                            <td class="font-mono font-semibold text-gray-900">: MSB/F-LOG-001</td>
-                        </tr>
-                        <tr>
-                            <td class="pr-4 text-gray-500 font-medium">Revisi</td>
-                            <td class="text-gray-900">: Rev.00</td>
-                        </tr>
-                    </table>
-                    <div class="barcode-container bg-white p-1.5 border border-gray-200 rounded flex justify-center items-center">
-                        <img src="https://bwipjs-api.metafloor.com/?bcid=code128&text=MSB%2FF-LOG-001&scale=2&height=8" alt="Barcode No Form" class="h-7 w-auto object-contain">
-                    </div>
+            </td>
+            <td class="header-title-cell">
+                <span class="doc-title-main">Formulir Izin Terpadu</span>
+                <span class="doc-title-sub">(GATE PASS SYSTEM)</span>
+                <div class="doc-meta">
+                    No. Form: MSB/F-HR-006 &nbsp;|&nbsp; Revisi: 00
                 </div>
-            </div>
+            </td>
+        </tr>
+    </table>
+
+    <div class="search-section">
+        <div class="search-group">
+            <label for="id-izin-input"><strong>MASUKKAN ID IZIN :</strong></label>
+            <input type="text" id="id-izin-input" class="search-input" placeholder="Masukkan ID Izin dari Sheet...">
         </div>
-
-        <div class="text-center my-6">
-            <h2 class="text-2xl font-bold tracking-wide text-gray-800 uppercase border-b border-gray-200 inline-block pb-1">DELIVERY ORDER</h2>
-            <p class="text-sm text-gray-500 mt-1">Surat Jalan Pengiriman Barang</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 text-sm">
-            <div class="bg-blue-50/50 p-4 rounded-lg border border-blue-100 flex flex-col justify-between">
-                <div>
-                    <span class="text-xs uppercase tracking-wider text-blue-800 font-bold block mb-2">Dikirimkan Kepada:</span>
-                    
-                    <select id="selectCustomer" onchange="gantiAlamat()" class="no-print border border-gray-300 px-2 py-1 rounded w-full font-semibold text-xs mb-3 text-gray-800 bg-white focus:outline-none focus:border-blue-500">
-                        <option value="KOMATSU_INDO">PT KOMATSU INDONESIA</option>
-                        <option value="KOMATSU_CIBITUNG">PT KOMATSU PLANT CIBITUNG</option>
-                        <option value="SUMITOMO">PT SUMITOMO CONSTRUCTION MACHINERY INDONESIA</option>
-                    </select>
-
-                    <p id="printCustomerName" class="hidden print:block font-bold text-gray-900 text-sm uppercase mb-1"></p>
-                    
-                    <p id="customerAddress" class="text-xs text-gray-700 mt-1 leading-relaxed min-h-[40px]">
-                        Jl. Cakung Cilincing Raya No.KM. 4, RT.7/RW.2, Sukapura, Kec. Cilincing, Jakarta Utara, Daerah Khusus Ibukota Jakarta 14140
-                    </p>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 gap-2 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                <table class="w-full text-xs">
-                    <tr>
-                        <td class="w-1/3 py-1 text-gray-500 align-middle">No. Surat Jalan</td>
-                        <td class="py-1 font-semibold text-gray-800 flex items-center gap-1">
-                            <span>:</span>
-                            <select id="selectDeliveryNumber" onchange="cariData()" class="no-print border border-gray-300 px-2 py-1 rounded w-48 font-mono text-xs focus:outline-none focus:border-blue-500 bg-white">
-                                <option value="">-- Memuat Data... --</option>
-                            </select>
-                            <span id="textDeliveryNumber" class="font-mono text-gray-900 bg-yellow-100 print:bg-transparent px-1 rounded"></span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="py-1 text-gray-500">Hari, Tanggal</td>
-                        <td class="py-1" id="docDeliveryDate">: -</td>
-                    </tr>
-                    <tr>
-                        <td class="py-1 text-gray-500">Halaman</td>
-                        <td class="py-1">: 1 dari 1</td>
-                    </tr>
-                    <tr>
-                        <td class="py-1 text-gray-500">PIC Penerima</td>
-                        <td class="py-1">
-                            <input type="text" placeholder="Masukkan nama..." class="border-b border-gray-400 w-full focus:outline-none bg-transparent">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="py-1 text-gray-500">Telp/Whatsapp</td>
-                        <td class="py-1">
-                            <input type="text" placeholder="Masukkan nomor..." class="border-b border-gray-400 w-full focus:outline-none bg-transparent">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="py-1 text-gray-500">Catatan</td>
-                        <td class="py-1">
-                            <input type="text" placeholder="Masukkan catatan..." class="border-b border-gray-400 w-full focus:outline-none bg-transparent">
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-
-        <div class="mb-6">
-            <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Rincian Kendaraan:</h3>
-            <div class="overflow-x-auto">
-                <table class="min-w-full text-xs text-left border border-gray-200 rounded-lg overflow-hidden">
-                    <thead class="bg-gray-100 uppercase text-gray-600 font-semibold border-b border-gray-200">
-                        <tr>
-                            <th class="px-4 py-2">Transporter</th>
-                            <th class="px-4 py-2">Plat Kendaraan</th>
-                            <th class="px-4 py-2">Pengemudi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200 text-gray-700">
-                        <tr>
-                            <td class="px-4 py-3 font-medium" id="vTransporter">-</td>
-                            <td class="px-4 py-3 font-mono" id="vPlate">-</td>
-                            <td class="px-4 py-3" id="vDriver">-</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="bg-yellow-50 border-l-4 border-yellow-500 p-3 mb-6 rounded-r">
-            <p class="text-xs text-yellow-800 leading-relaxed">
-                Dengan ini kami sampaikan informasi pengiriman. Mohon periksa barang setelah diterima sesuai dengan rincian terlampir. 
-                Jika ada ketidaksesuaian atau kerusakan, harap segera hubungi kami. Terima kasih atas kepercayaan dan kerja sama Anda.
-            </p>
-        </div>
-
-        <div class="mb-8">
-            <div class="overflow-x-auto">
-                <table class="min-w-full text-xs text-left border border-gray-300 rounded-lg overflow-hidden">
-                    <thead class="bg-blue-900 text-white uppercase tracking-wider font-semibold">
-                        <tr>
-                            <th class="px-4 py-2.5 text-center w-12">Nomor</th>
-                            <th class="px-4 py-2.5">Serial Number</th>
-                            <th class="px-4 py-2.5">Unit</th>
-                            <th class="px-4 py-2.5 text-right w-20">Qty</th>
-                            <th class="px-4 py-2.5 w-24">UOM</th>
-                            <th class="px-4 py-2.5">PO Number</th>
-                        </tr>
-                    </thead>
-                    <tbody id="itemsTableBody" class="divide-y divide-gray-200 text-gray-700">
-                        <tr>
-                            <td colspan="6" class="px-4 py-4 text-center text-gray-400 italic">Belum ada data surat jalan yang dipilih</td>
-                        </tr>
-                    </tbody>
-                    <tfoot class="bg-gray-50 border-t-2 border-gray-300 font-bold text-gray-950 text-sm">
-                        <tr>
-                            <td colspan="3" class="px-4 py-3 text-right uppercase tracking-wider">Grand Total</td>
-                            <td class="px-4 py-3 text-right text-blue-900 font-mono" id="grandTotal">0</td>
-                            <td colspan="2" class="px-4 py-3 bg-gray-100/50"></td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-3 gap-4 text-center text-xs mt-12 mb-6">
-            <div class="flex flex-col items-center">
-                <p class="text-gray-500 mb-4 uppercase tracking-wider font-semibold text-center">Dikirim Oleh,</p>
-                <div class="flex items-center gap-3">
-                    <img src="Aspuro Amarulloh Khoiri.png" alt="QR Code" class="w-16 h-16">
-                    <div class="text-left">
-                        <p class="text-[10px] leading-tight font-medium">Ditanda Tangani Secara Digital Oleh:</p>
-                        <p class="text-[10px] leading-tight text-gray-500">Administration</p>
-                        <p class="text-xs font-bold mt-1">Aspuro Amarulloh Khoiri</p>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <p class="text-gray-500 mb-16 uppercase tracking-wider font-semibold">Pengemudi,</p>
-                <div class="border-b border-gray-400 mx-6 font-semibold text-center min-h-[16px] text-gray-900" id="footerDriver"></div> 
-                <p class="text-gray-400 mt-1 italic">Nama Jelas</p>
-            </div>
-            <div>
-                <p class="text-gray-500 mb-16 uppercase tracking-wider font-semibold">Diterima Oleh,</p>
-                <div class="border-b border-gray-400 mx-6"></div>
-                <p class="text-gray-400 mt-1 italic">*Nama lengkap & Stamp</p>
-            </div>
-        </div>
-
-        <div class="border-t border-gray-200 pt-3 mt-8 flex flex-col sm:flex-row justify-between items-center text-[10px] text-gray-400 italic">
-            <div>Dokumen ini dicetak secara otomatis terintegrasi ERP System Murinda Sentra Baja</div>
-            <div class="font-mono mt-1 sm:mt-0" id="printTimestamp">-</div>
-        </div>
-
+        <button type="button" class="btn-search" onclick="fetchIzinData()">Cari & Sinkronisasi</button>
     </div>
 
-<script>
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwbJATNZKOfMvPYItbH4FWGph4Y9zsKLr0Pynr1ZnHnDcp4-YAVm1HPB8QUSaxr7AfX5A/exec';
+    <div class="section-header">Informasi Personel & Karyawan</div>
+    <div class="grid-2">
+        <div class="form-group">
+            <label>ID Karyawan (NIK)</label>
+            <input type="text" id="nik-input" readonly>
+        </div>
+        <div class="form-group">
+            <label>Nama Lengkap</label>
+            <input type="text" id="nama-input" readonly>
+        </div>
+    </div>
+    <div class="grid-2">
+        <div class="form-group">
+            <label>Departemen</label>
+            <input type="text" id="dept-input" readonly>
+        </div>
+        <div class="form-group">
+            <label>Jabatan / Posisi</label>
+            <input type="text" id="jabatan-input" readonly>
+        </div>
+    </div>
 
-const daftarAlamat = {
-    "KOMATSU_INDO": {
-        nama: "PT KOMATSU INDONESIA",
-        alamat: "Jl. Cakung Cilincing Raya No.KM. 4, RT.7/RW.2, Sukapura, Kec. Cilincing, Jakarta Utara, Daerah Khusus Ibukota Jakarta 14140"
-    },
-    "KOMATSU_CIBITUNG": {
-        nama: "PT KOMATSU PLANT CIBITUNG",
-        alamat: "Kawasan Industri MM 2100, Jl. Jawa Raya Blok JJ IV-2, Cibitung, Jatiwangi, Kec. Cikarang Bar., Kabupaten Bekasi, Jawa Barat 17530"
-    },
-    "SUMITOMO": {
-        nama: "PT SUMITOMO CONSTRUCTION MACHINERY INDONESIA",
-        alamat: "Jl. Maligi VIII Lot T-1, Karawang International Industrial City (KIIC), Teluk jambe Barat, Karawang, Jawa Barat 41361 Indonesia"
-    }
-};
+    <div class="section-header">Klasifikasi Ketidakhadiran / Jenis Izin</div>
+    <div class="grid-klasifikasi">
+        <div class="klasifikasi-box">
+            <h4>A. IZIN HARIAN (TIDAK MASUK)</h4>
+            <label class="checkbox-item"><input type="checkbox" id="check-cuti"> Cuti Tahunan (Annual Leave)</label>
+            <label class="checkbox-item"><input type="checkbox" id="check-sakit"> Izin Sakit (Medical - Lampirkan SKD)</label>
+            <label class="checkbox-item"><input type="checkbox" id="check-duka"> Duka / Kemalangan (Compassionate)</label>
+        </div>
+        <div class="klasifikasi-box">
+            <h4>B. IZIN KELUAR (GATE PASS)</h4>
+            <label class="checkbox-item"><input type="checkbox" id="check-dinas"> Dinas Luar (Work Related)</label>
+            <label class="checkbox-item"><input type="checkbox" id="check-pribadi"> Izin Pribadi (Meninggalkan Kantor)</label>
+            <label class="checkbox-item"><input type="checkbox" id="check-pulang"> Pulang Awal (Early Leave)</label>
+            <label class="checkbox-item"><input type="checkbox" id="check-mendesak"> Keperluan Mendesak (Urgent)</label>
+            <label class="checkbox-item"><input type="checkbox" id="check-terlambat"> Datang Terlambat (Late Arrival)</label>
+        </div>
+    </div>
 
-window.onload = function() {
-    const sekarang = new Date();
-    const opsi = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-    document.getElementById('printTimestamp').innerText = "Kalijati-Subang, " + sekarang.toLocaleDateString('id-ID', opsi);
+    <div class="section-header">Rincian Waktu, Durasi & Alasan</div>
+    <div class="grid-3">
+        <div class="form-group">
+            <label>Tanggal Mulai</label>
+            <input type="text" id="tgl-mulai-input" readonly>
+        </div>
+        <div class="form-group">
+            <label>Tanggal Selesai</label>
+            <input type="text" id="tgl-selesai-input" readonly>
+        </div>
+        <div class="form-group">
+            <label>Durasi (Hari)</label>
+            <input type="text" id="durasi-input" readonly>
+        </div>
+    </div>
 
-    gantiAlamat();
-    loadDropdownData();
-}
+    <div class="grid-3">
+        <div class="form-group">
+            <label>Jam Keluar</label>
+            <input type="text" id="jam-keluar-input" readonly>
+        </div>
+        <div class="form-group">
+            <label>Jam Kembali</label>
+            <input type="text" id="jam-kembali-input" readonly>
+        </div>
+        <div class="form-group">
+            <label>Kembali ke Kantor?</label>
+            <input type="text" id="kembali-input" readonly>
+        </div>
+    </div>
 
-function printDocument(mode) {
-    const customerSelect = document.getElementById('selectCustomer');
-    document.getElementById('printCustomerName').innerText = customerSelect.options[customerSelect.selectedIndex].text;
-    document.getElementById('textDeliveryNumber').innerText = document.getElementById('selectDeliveryNumber').value || "-";
+    <div class="grid-2" style="margin-top: 5px;">
+        <div class="form-group">
+            <label>Keterangan / Alasan Terperinci</label>
+            <input type="text" id="keterangan-input" readonly>
+        </div>
+        <div class="form-group">
+            <label>Serah Terima Tugas (Handover Ke)</label>
+            <input type="text" id="handover-input" readonly>
+        </div>
+    </div>
 
-    if (mode === 'dotmatrix') {
-        document.body.classList.add('dot-matrix');
-    } else {
-        document.body.classList.remove('dot-matrix');
-    }
-    
-    window.print();
-}
-
-window.addEventListener("afterprint", (event) => {
-    document.body.classList.remove('dot-matrix');
-});
-
-function gantiAlamat() {
-    const pilihan = document.getElementById('selectCustomer').value;
-    const dataTujuan = daftarAlamat[pilihan];
-    
-    document.getElementById('customerAddress').innerText = dataTujuan.alamat;
-    document.getElementById('printCustomerName').innerText = dataTujuan.nama;
-}
-
-function loadDropdownData() {
-    const dropdown = document.getElementById('selectDeliveryNumber');
-    
-    fetch(WEB_APP_URL)
-    .then(res => res.json())
-    .then(response => {
-        if (response.status === "success") {
-            dropdown.innerHTML = '<option value="">-- Pilih No. Surat Jalan --</option>';
-            response.list.forEach(num => {
-                if(num && num !== "null") {
-                    let option = document.createElement('option');
-                    option.value = num;
-                    option.textContent = num;
-                    dropdown.appendChild(option);
-                }
-            });
-        } else {
-            dropdown.innerHTML = '<option value="">Gagal memuat daftar DO</option>';
-        }
-    })
-    .catch(err => {
-        console.error(err);
-        dropdown.innerHTML = '<option value="">Kesalahan Jaringan</option>';
-    });
-}
-
-function cariData() {
-    const selectBox = document.getElementById('selectDeliveryNumber');
-    const deliveryNumber = selectBox.value;
-    const textDeliveryNode = document.getElementById('textDeliveryNumber');
-    const tableBody = document.getElementById('itemsTableBody');
-
-    if (!deliveryNumber) {
-        resetForm();
-        return;
-    }
-
-    textDeliveryNode.innerText = "Memuat...";
-
-    fetch(WEB_APP_URL, {
-        method: 'POST',
-        body: JSON.stringify({ deliveryNumber: deliveryNumber })
-    })
-    .then(res => res.json())
-    .then(response => {
-        if (response.status === "success") {
-            textDeliveryNode.innerText = deliveryNumber;
-            
-            document.getElementById('docDeliveryDate').innerText = ": " + (response.info.deliveryDate || "-");
-            document.getElementById('vTransporter').innerText = response.info.transporter || "-";
-            document.getElementById('vPlate').innerText = response.info.licensePlate || "-";
-            document.getElementById('vDriver').innerText = response.info.driver || "-";
-            
-            document.getElementById('footerDriver').innerText = response.info.driver || "";
-            
-            tableBody.innerHTML = "";
-            let totalQty = 0;
-            
-            response.items.forEach((item, index) => {
-                totalQty += item.qty;
-                
-                let row = `
-                    <tr class="hover:bg-gray-50 transition">
-                        <td class="px-4 py-2.5 text-center font-medium text-gray-400">${index + 1}</td>
-                        <td class="px-4 py-2.5 font-mono text-gray-500">${item.serialNumber || "-"}</td>
-                        <td class="px-4 py-2.5 font-medium text-gray-900">${item.unit || "-"}</td>
-                        <td class="px-4 py-2.5 text-right font-semibold">${item.qty}</td>
-                        <td class="px-4 py-2.5 text-gray-500">${item.uom || "-"}</td>
-                        <td class="px-4 py-2.5 font-mono text-gray-500">${item.poNumber || "-"}</td>
-                    </tr>
-                `;
-                tableBody.insertAdjacentHTML('beforeend', row);
-            });
-            
-            document.getElementById('grandTotal').innerText = totalQty;
-            
-        } else {
-            alert('Data gagal ditemukan.');
-            textDeliveryNode.innerText = "";
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Terjadi kegagalan koneksi saat mengambil rincian data.');
-        textDeliveryNode.innerText = "";
-    });
-}
-
-function resetForm() {
-    document.getElementById('textDeliveryNumber').innerText = "";
-    document.getElementById('docDeliveryDate').innerText = ": -";
-    document.getElementById('vTransporter').innerText = "-";
-    document.getElementById('vPlate').innerText = "-";
-    document.getElementById('vDriver').innerText = "-";
-    document.getElementById('footerDriver').innerText = "";
-    document.getElementById('itemsTableBody').innerHTML = `
+    <table class="signature-table">
         <tr>
-            <td colspan="6" class="px-4 py-4 text-center text-gray-400 italic">Belum ada data surat jalan yang dipilih</td>
+            <td>
+                <div class="sig-container">
+                    <div class="sig-box" id="sig-pemohon"></div>
+                    <div class="sig-label">Pemohon</div>
+                </div>
+            </td>
+            <td>
+                <div class="sig-container">
+                    <div class="sig-box" id="sig-manager"></div>
+                    <div class="sig-label">Manager Terkait</div>
+                </div>
+            </td>
+            <td>
+                <div class="sig-container">
+                    <div class="sig-box" id="sig-hrd"></div>
+                    <div class="sig-label">HR Department</div>
+                </div>
+            </td>
+            <td>
+                <div class="sig-container">
+                    <div class="sig-box" id="sig-security"></div>
+                    <div class="sig-label">Security Gate</div>
+                </div>
+            </td>
         </tr>
-    `;
-    document.getElementById('grandTotal').innerText = "0";
-}
+    </table>
+
+    <div class="rules-box">
+        <strong>Prosedur Keamanan & Ketertiban Gerbang:</strong>
+        <ol style="margin: 0; padding-left: 20px; line-height: 1.6;">
+            <li>Pengajuan izin harian wajib dilakukan H-3, kecuali kondisi darurat medis/sakit.</li>
+            <li>Formulir Gate Pass harus disetujui Atasan dan divalidasi fisik oleh Security di pos depan.</li>
+            <li>Tanpa dokumen ini, pihak Security berhak menahan karyawan untuk keluar/masuk area pabrik PT Murinda Sentra Baja.</li>
+        </ol>
+    </div>
+
+    <table class="footer-table">
+        <tr>
+            <td class="footer-left"><strong>Validasi HR System:</strong> Dokumen terintegrasi otomatis dengan ERP Database PT Murinda Sentra Baja.</td>
+            <td class="footer-right"><strong>Waktu Cetak:</strong> <span id="print-time"></span></td>
+        </tr>
+    </table>
+
+    <div style="text-align: center; margin-top: 25px;" class="no-print">
+        <button onclick="window.print()" style="padding: 12px 35px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: all 0.2s;">Cetak Dokumen / Simpan PDF</button>
+    </div>
+</div>
+
+<script>
+  var now = new Date();
+  var formatWaktu = now.toLocaleString('id-ID', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  document.getElementById('print-time').innerText = formatWaktu + ' WIB';
+
+  function clearCheckboxes() {
+    const checkboxes = ['check-cuti', 'check-sakit', 'check-duka', 'check-dinas', 'check-pribadi', 'check-pulang', 'check-mendesak', 'check-terlambat'];
+    checkboxes.forEach(id => document.getElementById(id).checked = false);
+    document.getElementById('sig-pemohon').innerHTML = '';
+    document.getElementById('sig-manager').innerHTML = '';
+    document.getElementById('sig-hrd').innerHTML = '';
+    document.getElementById('sig-security').innerHTML = '';
+  }
+
+  function fetchIzinData() {
+    var idIzin = document.getElementById('id-izin-input').value.trim();
+    if(!idIzin) { alert("Silakan isi ID Izin terlebih dahulu!"); return; }
+    
+    // GANTI DENGAN URL WEB APP DEPLOYMENT TERBARU ANDA
+    var url = "https://script.google.com/macros/s/AKfycbwgdzqqzGz5TNTTctB0UcuP6vtimuTco9PjNUYSeN6FAipcE1aPY5wgnHNTrjx8QawViw/exec" + "?idIzin=" + idIzin;
+
+    // Menggunakan konfigurasi cross-origin dan redirect follow secara optimal
+    fetch(url, {
+      method: "GET",
+      mode: "cors",
+      redirect: "follow"
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("HTTP error, status = " + response.status);
+        }
+        return response.json();
+      })
+      .then(data => {
+        if(data.success === true) {
+          clearCheckboxes();
+
+          document.getElementById('nik-input').value = data.nik || "";
+          document.getElementById('nama-input').value = data.nama || "";
+          document.getElementById('jabatan-input').value = data.jabatan || "";
+          document.getElementById('dept-input').value = data.dept || "";
+          document.getElementById('tgl-mulai-input').value = data.tglMulai || "";
+          document.getElementById('tgl-selesai-input').value = data.tglSelesai || "";
+          document.getElementById('durasi-input').value = data.durasi ?? "";
+          document.getElementById('jam-keluar-input').value = data.jamKeluar || "-";
+          document.getElementById('jam-kembali-input').value = data.jamKembali || "-";
+          document.getElementById('kembali-input').value = data.kembali || "";
+          document.getElementById('keterangan-input').value = data.keterangan || "";
+          document.getElementById('handover-input').value = data.handover || "-";
+
+          var jenis = data.jenisIzin ? data.jenisIzin.trim().toLowerCase() : "";
+          
+          if(jenis.includes("cuti tahunan")) document.getElementById('check-cuti').checked = true;
+          else if(jenis.includes("sakit")) document.getElementById('check-sakit').checked = true;
+          else if(jenis.includes("duka") || jenis.includes("kemalangan")) document.getElementById('check-duka').checked = true;
+          else if(jenis.includes("dinas luar")) document.getElementById('check-dinas').checked = true;
+          else if(jenis.includes("izin pribadi")) document.getElementById('check-pribadi').checked = true;
+          else if(jenis.includes("pulang awal")) document.getElementById('check-pulang').checked = true;
+          else if(jenis.includes("mendesak") || jenis.includes("urgent")) document.getElementById('check-mendesak').checked = true;
+          else if(jenis.includes("terlambat")) document.getElementById('check-terlambat').checked = true;
+
+          // 1. Generate QR Code Pemohon Dinamis (ID Karyawan - Nama)
+          if(data.nik && data.nama) {
+              var textPemohon = data.nik + " - " + data.nama;
+              var qrPemohonUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(textPemohon);
+              document.getElementById('sig-pemohon').innerHTML = '<img src="' + qrPemohonUrl + '" alt="QR Pemohon" style="height: 60px; object-fit: contain;">';
+          }
+
+          // 2. Tanda Tangan Digital Manager Terkait
+          var managerRole = data.managerApproval; 
+          var sigManagerBox = document.getElementById('sig-manager');
+          if (managerRole && managerRole.trim() !== "") {
+              sigManagerBox.innerHTML = '<img src="' + managerRole + '.png" alt="QR ' + managerRole + '" style="height: 45px; object-fit: contain; margin-bottom: 2px;"><div style="font-size: 8px; line-height: 1.1; color: #475569; text-align: center;">Ditanda tangani secara digital oleh:<br><b>' + managerRole + '</b></div>';
+          }
+
+          // 3. Tanda Tangan Digital HRD & Security
+          document.getElementById('sig-hrd').innerHTML = '<img src="HRD.png" alt="QR HRD" style="height: 45px; object-fit: contain; margin-bottom: 2px;"><div style="font-size: 8px; line-height: 1.1; color: #475569; text-align: center;">Ditanda tangani secara digital oleh:<br><b>HR Department</b></div>';
+          document.getElementById('sig-security').innerHTML = '<img src="Security.png" alt="QR Security" style="height: 45px; object-fit: contain; margin-bottom: 2px;"><div style="font-size: 8px; line-height: 1.1; color: #475569; text-align: center;">Ditanda tangani secara digital oleh:<br><b>Security Gate</b></div>';
+
+        } else {
+          alert(data.message || "ID Izin tidak ditemukan di database!");
+        }
+      })
+      .catch(error => {
+        console.error('Error detail:', error);
+        alert("Gagal terhubung dengan server database Apps Script.\n\nCatatan Keamanan Browser:\nJika Anda menjalankan file HTML langsung dari folder komputer (URL diawali 'file:///'), browser akan otomatis memblokir koneksi database demi alasan keamanan (CORS Policy).\n\nSolusi: Unggah (push) file HTML ini ke GitHub Pages MSB Anda, atau jalankan menggunakan VS Code Live Server.");
+      });
+  }
 </script>
 </body>
 </html>
