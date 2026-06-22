@@ -6,6 +6,11 @@
     <title>Surat Jalan / Delivery Order - PT Murinda Sentra Baja</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* Sembunyikan area cetak duplikat saat berada di layar web biasa */
+        @media screen {
+            #printArea { display: none !important; }
+        }
+
         @media print {
             /* Pengaturan cetak umum */
             body { 
@@ -20,6 +25,20 @@
                 margin: 0 auto !important;
             }
             .no-print { display: none !important; }
+            
+            /* Sembunyikan container utama layar agar tidak double saat cetak */
+            #appArea { display: none !important; }
+            #printArea { display: block !important; }
+
+            /* Pengaturan per halaman untuk 4 salinan */
+            .print-page {
+                page-break-after: always;
+                margin: 0 auto !important;
+                padding: 0 !important;
+            }
+            .print-page:last-child {
+                page-break-after: avoid;
+            }
 
             /* Jika cetak biasa / PDF, tetap pertahankan warna asli */
             body:not(.dot-matrix) * {
@@ -50,8 +69,9 @@
                 filter: grayscale(100%) contrast(200%) !important;
             }
 
-            /* 1. Menghilangkan semua background kotak kaku & warna background header */
+            /* Menghilangkan semua background kotak kaku & warna background header */
             body.dot-matrix .bg-blue-900,
+            body.dot-matrix .bg-blue-50,
             body.dot-matrix .bg-blue-50\/50,
             body.dot-matrix .bg-gray-50,
             body.dot-matrix .bg-gray-100,
@@ -65,7 +85,7 @@
                 box-shadow: none !important;
             }
 
-            /* 2. Mengubah format Tabel Rincian Kendaraan menjadi garis putus-putus (Sesuai Gambar) */
+            /* Mengubah format Tabel Rincian Kendaraan menjadi garis putus-putus */
             body.dot-matrix .mb-6 .overflow-x-auto table {
                 border: none !important;
                 border-top: 1.5px dashed #000000 !important;
@@ -77,7 +97,7 @@
                 padding: 4px 8px !important;
             }
 
-            /* 3. Mengubah Tabel Item Utama menjadi Grid Hitam Tipis & Tegas (Sesuai Gambar) */
+            /* Mengubah Tabel Item Utama menjadi Grid Hitam Tipis & Tegas */
             body.dot-matrix .mb-8 table {
                 border-collapse: collapse !important;
                 border: 2px solid #000000 !important;
@@ -95,7 +115,7 @@
                 border-top: 2px solid #000000 !important;
             }
 
-            /* 4. Penyesuaian garis input tulisan tangan saat dicetak */
+            /* Penyesuaian garis input tulisan tangan saat dicetak */
             body.dot-matrix input { 
                 border-bottom: 1px dashed #000000 !important; 
                 background: transparent !important; 
@@ -105,7 +125,7 @@
 </head>
 <body class="bg-gray-100 text-gray-800 font-sans antialiased p-4 sm:p-8">
 
-    <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md border border-gray-200">
+    <div id="appArea" class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md border border-gray-200">
 
         <div class="no-print flex flex-col sm:flex-row justify-end gap-3 mb-6">
             <button onclick="printDocument('standard')" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded shadow transition duration-200 flex items-center justify-center gap-2">
@@ -150,6 +170,7 @@
                     <div class="barcode-container bg-white p-1.5 border border-gray-200 rounded flex justify-center items-center">
                         <img src="https://bwipjs-api.metafloor.com/?bcid=code128&text=MSB%2FF-LOG-001&scale=2&height=8" alt="Barcode No Form" class="h-7 w-auto object-contain">
                     </div>
+                    <div class="copy-label hidden text-center font-bold text-xs mt-2 uppercase text-gray-800 border-t border-gray-300 pt-1 tracking-wide"></div>
                 </div>
             </div>
         </div>
@@ -252,7 +273,7 @@
         <div class="mb-8">
             <div class="overflow-x-auto">
                 <table class="min-w-full text-xs text-left border border-gray-300 rounded-lg overflow-hidden">
-                    <thead class="bg-blue-900 text-white uppercase tracking-wider font-semibold">
+                    <thead class="bg-blue-50 text-blue-900 border-b-2 border-blue-200 uppercase tracking-wider font-semibold">
                         <tr>
                             <th class="px-4 py-2.5 text-center w-12">Nomor</th>
                             <th class="px-4 py-2.5">Serial Number</th>
@@ -260,18 +281,19 @@
                             <th class="px-4 py-2.5 text-right w-20">Qty</th>
                             <th class="px-4 py-2.5 w-24">UOM</th>
                             <th class="px-4 py-2.5">PO Number</th>
+                            <th class="px-4 py-2.5">Remark</th>
                         </tr>
                     </thead>
                     <tbody id="itemsTableBody" class="divide-y divide-gray-200 text-gray-700">
                         <tr>
-                            <td colspan="6" class="px-4 py-4 text-center text-gray-400 italic">Belum ada data surat jalan yang dipilih</td>
+                            <td colspan="7" class="px-4 py-4 text-center text-gray-400 italic">Belum ada data surat jalan yang dipilih</td>
                         </tr>
                     </tbody>
                     <tfoot class="bg-gray-50 border-t-2 border-gray-300 font-bold text-gray-950 text-sm">
                         <tr>
                             <td colspan="3" class="px-4 py-3 text-right uppercase tracking-wider">Grand Total</td>
                             <td class="px-4 py-3 text-right text-blue-900 font-mono" id="grandTotal">0</td>
-                            <td colspan="2" class="px-4 py-3 bg-gray-100/50"></td>
+                            <td colspan="3" class="px-4 py-3 bg-gray-100/50"></td>
                         </tr>
                     </tfoot>
                 </table>
@@ -310,6 +332,8 @@
 
     </div>
 
+    <div id="printArea"></div>
+
 <script>
 const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwbJATNZKOfMvPYItbH4FWGph4Y9zsKLr0Pynr1ZnHnDcp4-YAVm1HPB8QUSaxr7AfX5A/exec';
 
@@ -338,19 +362,59 @@ window.onload = function() {
 }
 
 function printDocument(mode) {
+    // Sinkronisasi data ke tampilan teks statis sebelum kloning dilakukan
     const customerSelect = document.getElementById('selectCustomer');
     document.getElementById('printCustomerName').innerText = customerSelect.options[customerSelect.selectedIndex].text;
     document.getElementById('textDeliveryNumber').innerText = document.getElementById('selectDeliveryNumber').value || "-";
 
+    const appArea = document.getElementById('appArea');
+    const printArea = document.getElementById('printArea');
+    
+    // Reset area print agar bersih dari cetakan sebelumnya
+    printArea.innerHTML = '';
+
+    // Nama Keterangan Salinan masing-masing halaman
+    const copiesLabels = ["Penerima Barang", "Transporter", "Security Murinda", "Arsip"];
+
+    // Menggandakan dokumen secara otomatis menjadi 4 salinan
+    copiesLabels.forEach((label, index) => {
+        const clone = appArea.cloneNode(true);
+        clone.id = ""; // Menghapus id duplikat pada halaman hasil kloning
+        clone.classList.add('print-page');
+
+        // Menghapus elemen tombol cetak dari dokumen fisik cetak
+        const noPrintElements = clone.querySelectorAll('.no-print');
+        noPrintElements.forEach(el => el.remove());
+
+        // Menyalin value dari elemen input teks asli (karena cloneNode bawaan tidak menyalin teks ketikan terbaru)
+        const originalInputs = appArea.querySelectorAll('input');
+        const clonedInputs = clone.querySelectorAll('input');
+        originalInputs.forEach((input, i) => {
+            clonedInputs[i].setAttribute('value', input.value);
+        });
+
+        // Menyisipkan teks keterangan salinan tepat di bawah barcode
+        const labelContainer = clone.querySelector('.copy-label');
+        if (labelContainer) {
+            labelContainer.innerText = label;
+            labelContainer.classList.remove('hidden');
+        }
+
+        printArea.appendChild(clone);
+    });
+
+    // Menentukan jenis dot matrix atau standar
     if (mode === 'dotmatrix') {
         document.body.classList.add('dot-matrix');
     } else {
         document.body.classList.remove('dot-matrix');
     }
 
+    // Eksekusi print bawaan sistem browser
     window.print();
 }
 
+// Kembalikan tampilan layar browser menjadi semula setelah dialog print ditutup
 window.addEventListener("afterprint", (event) => {
     document.body.classList.remove('dot-matrix');
 });
@@ -424,6 +488,7 @@ function cariData() {
             response.items.forEach((item, index) => {
                 totalQty += item.qty;
 
+                // Membuat baris baru dengan penambahan kolom input manual pada 'Remark'
                 let row = `
                     <tr class="hover:bg-gray-50 transition">
                         <td class="px-4 py-2.5 text-center font-medium text-gray-400">${index + 1}</td>
@@ -432,6 +497,9 @@ function cariData() {
                         <td class="px-4 py-2.5 text-right font-semibold">${item.qty}</td>
                         <td class="px-4 py-2.5 text-gray-500">${item.uom || "-"}</td>
                         <td class="px-4 py-2.5 font-mono text-gray-500">${item.poNumber || "-"}</td>
+                        <td class="px-4 py-2.5">
+                            <input type="text" placeholder="" value="${item.remark || ''}" class="border-b border-gray-300 w-full focus:outline-none bg-transparent">
+                        </td>
                     </tr>
                 `;
                 tableBody.insertAdjacentHTML('beforeend', row);
@@ -460,7 +528,7 @@ function resetForm() {
     document.getElementById('footerDriver').innerText = "";
     document.getElementById('itemsTableBody').innerHTML = `
         <tr>
-            <td colspan="6" class="px-4 py-4 text-center text-gray-400 italic">Belum ada data surat jalan yang dipilih</td>
+            <td colspan="7" class="px-4 py-4 text-center text-gray-400 italic">Belum ada data surat jalan yang dipilih</td>
         </tr>
     `;
     document.getElementById('grandTotal').innerText = "0";
