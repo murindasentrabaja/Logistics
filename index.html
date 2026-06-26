@@ -75,17 +75,20 @@
             body.dot-matrix .bg-blue-50\/50,
             body.dot-matrix .bg-gray-50,
             body.dot-matrix .bg-gray-100,
+            body.dot-matrix .bg-gray-50\/80,
+            body.dot-matrix .bg-gray-200\/60,
             body.dot-matrix .bg-yellow-50,
             body.dot-matrix .rounded-lg,
             body.dot-matrix .border-blue-100,
-            body.dot-matrix .border-gray-200 {
+            body.dot-matrix .border-gray-200,
+            body.dot-matrix .border-gray-300 {
                 background-color: transparent !important;
                 background: transparent !important;
                 border-color: transparent !important;
                 box-shadow: none !important;
             }
 
-            /* Mengubah format Tabel Rincian Kendaraan menjadi garis putus-putus */
+            /* Mengubah Format Tabel Rincian Kendaraan menjadi garis putus-putus */
             body.dot-matrix .mb-6 .overflow-x-auto table {
                 border: none !important;
                 border-top: 1.5px dashed #000000 !important;
@@ -119,6 +122,11 @@
             body.dot-matrix input { 
                 border-bottom: 1px dashed #000000 !important; 
                 background: transparent !important; 
+            }
+            
+            /* Sembunyikan elemen dekoratif watermark di dot matrix agar tidak kotor */
+            body.dot-matrix .anti-edit-pattern {
+                display: none !important;
             }
         }
     </style>
@@ -281,7 +289,7 @@
                             <th class="px-4 py-2.5 text-right w-20">Qty</th>
                             <th class="px-4 py-2.5 w-24">UOM</th>
                             <th class="px-4 py-2.5">PO Number</th>
-                            <th class="px-4 py-2.5">Remark</th>
+                            <th class="px-4 py-2.5">Part Number</th>
                         </tr>
                     </thead>
                     <tbody id="itemsTableBody" class="divide-y divide-gray-200 text-gray-700">
@@ -303,13 +311,32 @@
         <div class="grid grid-cols-3 gap-4 text-center text-xs mt-12 mb-6">
             <div class="flex flex-col items-center">
                 <p class="text-gray-500 mb-4 uppercase tracking-wider font-semibold text-center">Dikirim Oleh,</p>
-                <div class="flex items-center gap-3">
-                    <img src="Aspuro Amarulloh Khoiri.png" alt="QR Code" class="w-16 h-16">
-                    <div class="text-left">
-                        <p class="text-[10px] leading-tight font-medium">Ditanda Tangani Secara Digital Oleh:</p>
-                        <p class="text-[10px] leading-tight text-gray-500">Plant Administration</p>
-                  
-                        <p class="text-xs font-bold mt-1">Aspuro Amarulloh Khoiri</p>
+                <!-- Background Anti-Edit Digital Secure Box (Netral/Abu-abu) -->
+                <div class="bg-gray-50/80 border border-gray-300 rounded-lg p-3 flex items-center gap-3 relative shadow-sm overflow-hidden w-full max-w-[280px]">
+                    <!-- Tekstur Garis Tipis Anti-Edit (Seperti Kertas Sekuriti) -->
+                    <div class="anti-edit-pattern absolute inset-0 pointer-events-none opacity-20" style="background-image: repeating-linear-gradient(45deg, #cbd5e1 0px, #cbd5e1 1px, transparent 1px, transparent 4px);"></div>
+                    
+                    <!-- Watermark Teks MURINDA -->
+                    <div class="anti-edit-pattern absolute -right-2 -bottom-3 text-gray-300 opacity-40 pointer-events-none transform -rotate-12 select-none font-bold text-4xl tracking-widest">
+                        MURINDA
+                    </div>
+
+                    <img src="Aspuro Amarulloh Khoiri.png" alt="QR Code" class="w-14 h-14 relative z-10 border border-gray-300 rounded bg-white p-0.5 shrink-0">
+                    
+                    <div class="text-left relative z-10">
+                        <p class="text-[10px] leading-tight font-bold text-gray-800 uppercase tracking-wide">
+                            
+                        </p>
+                        <p class="text-[10px] leading-tight font-medium text-gray-600 mt-0.5"></p>
+                        <p class="text-xs font-bold text-gray-900 mt-0.5">Aspuro Amarulloh Khoiri</p>
+                        <!-- Nomor Otorisasi Dinamis -->
+                        <p class="text-[8px] font-mono text-gray-700 bg-gray-200/60 px-1 py-0.5 rounded mt-1 mb-1.5 inline-block border border-gray-300">
+                            Auth: <span id="authNumber" class="font-bold select-all">MURINDA-SEC-EMPTY</span>
+                        </p>
+                        <!-- Kalimat validasi -->
+                        <p class="text-[7.5px] leading-tight text-gray-500 italic border-t border-gray-300/50 pt-1.5">
+                            *Dokumen diterbitkan otomatis oleh sistem. Sah tanpa tanda tangan basah dan stempel perusahaan.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -335,7 +362,8 @@
     <div id="printArea"></div>
 
 <script>
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwbJATNZKOfMvPYItbH4FWGph4Y9zsKLr0Pynr1ZnHnDcp4-YAVm1HPB8QUSaxr7AfX5A/exec';
+// --- PASTIKAN URL WEB APP INI SESUAI DENGAN DEPLOYMENT TERBARU ANDA ---
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyPnLagTKM8LttDskMBi3r7ct7GknZjcCSApHzkY4YwB_6JVgc3Wm5zyheXnybYRyVhDA/exec';
 
 const daftarAlamat = {
     "KOMATSU_INDO": {
@@ -482,13 +510,18 @@ function cariData() {
 
             document.getElementById('footerDriver').innerText = response.info.driver || "";
 
+            // Pembuatan Nomor Otorisasi Unik (Anti-Edit Verification Number)
+            const cleanDO = deliveryNumber.replace(/[^a-zA-Z0-9]/g, '');
+            const randomHash = Math.random().toString(36).substring(2, 7).toUpperCase();
+            document.getElementById('authNumber').innerText = `MURINDA-${cleanDO}-${randomHash}`;
+
             tableBody.innerHTML = "";
             let totalQty = 0;
 
             response.items.forEach((item, index) => {
                 totalQty += item.qty;
 
-                // Membuat baris baru dengan penambahan kolom input manual pada 'Remark'
+                // Menampilkan kolom Part Number statis hasil tarikan database spreadsheet
                 let row = `
                     <tr class="hover:bg-gray-50 transition">
                         <td class="px-4 py-2.5 text-center font-medium text-gray-400">${index + 1}</td>
@@ -497,9 +530,7 @@ function cariData() {
                         <td class="px-4 py-2.5 text-right font-semibold">${item.qty}</td>
                         <td class="px-4 py-2.5 text-gray-500">${item.uom || "-"}</td>
                         <td class="px-4 py-2.5 font-mono text-gray-500">${item.poNumber || "-"}</td>
-                        <td class="px-4 py-2.5">
-                            <input type="text" placeholder="" value="${item.remark || ''}" class="border-b border-gray-300 w-full focus:outline-none bg-transparent">
-                        </td>
+                        <td class="px-4 py-2.5 font-mono text-gray-700 font-medium">${item.partNumber || "-"}</td>
                     </tr>
                 `;
                 tableBody.insertAdjacentHTML('beforeend', row);
@@ -526,6 +557,7 @@ function resetForm() {
     document.getElementById('vPlate').innerText = "-";
     document.getElementById('vDriver').innerText = "-";
     document.getElementById('footerDriver').innerText = "";
+    document.getElementById('authNumber').innerText = "MURINDA-SEC-EMPTY";
     document.getElementById('itemsTableBody').innerHTML = `
         <tr>
             <td colspan="7" class="px-4 py-4 text-center text-gray-400 italic">Belum ada data surat jalan yang dipilih</td>
